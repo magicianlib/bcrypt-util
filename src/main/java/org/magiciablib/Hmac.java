@@ -14,18 +14,12 @@ import java.security.NoSuchAlgorithmException;
  * @since 2023/11/11 10:52
  */
 public enum Hmac {
-    HMAC_MD5("HmacMD5"),
-    HMAC_SHA1("HmacSHA1"),
-    HMAC_SHA256("HmacSHA256"),
-    HMAC_SHA384("HmacSHA384"),
-    HMAC_SHA512("HmacSHA512"),
+    HmacMD5,
+    HmacSHA1,
+    HmacSHA256,
+    HmacSHA384,
+    HmacSHA512,
     ;
-
-    private final String algorithm;
-
-    Hmac(String algorithm) {
-        this.algorithm = algorithm;
-    }
 
     public String hmacHex(String secret, String plaintext) throws NoSuchAlgorithmException, InvalidKeyException {
         return Hex.toHexString(hmac(secret, plaintext));
@@ -36,10 +30,10 @@ public enum Hmac {
     }
 
     public byte[] hmac(String secret, String plaintext) throws NoSuchAlgorithmException, InvalidKeyException {
-        Mac sha256HMAC = Mac.getInstance(algorithm);
-        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(), algorithm);
-        sha256HMAC.init(keySpec);
-        return sha256HMAC.doFinal(plaintext.getBytes());
+        Mac mac = Mac.getInstance(this.name());
+        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(), this.name());
+        mac.init(keySpec);
+        return mac.doFinal(plaintext.getBytes());
     }
 
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -47,7 +41,7 @@ public enum Hmac {
         String secret = "f$s1f@9.";
         String plaintext = "hello,world";
 
-        System.out.println(HMAC_SHA1.hmacHex(secret, plaintext));
-        System.out.println(HMAC_SHA1.hmacBase64(secret, plaintext));
+        System.out.println(HmacSHA1.hmacHex(secret, plaintext));
+        System.out.println(HmacSHA1.hmacBase64(secret, plaintext));
     }
 }
