@@ -1,0 +1,33 @@
+name: sync github repo to gitee mirror
+
+on: push
+
+jobs:
+  mirror-sync:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Mirror the Github repos to Gitee.
+        uses: Yikun/hub-mirror-action@master
+
+        with:
+
+          src: github/magicianlib
+          dst: gitee/magicianlib
+
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+
+          # org or user, default is user
+          account_type: user
+
+          # 强制推送
+          force_update: true
+          debug: true
+
+          # 只同步当前仓库
+          static_list: ${{ github.event.repository.name }}
