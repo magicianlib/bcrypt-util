@@ -45,8 +45,8 @@ import java.util.Map;
  * 整个过程,只有使用A私钥签名的消息才能被验签成功.即使知道了消息内容,也无法伪造签名,防止消息被篡改.
  * </p><br>
  *
- * @author Shilin <br > magicianlib@gmail.com
- * @since 2023/11/11 10:53
+ * @author magicianlib@gmail.com
+ * @since 2023/11/11 13:55
  */
 public enum HashWithRSA {
 

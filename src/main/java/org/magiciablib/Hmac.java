@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * <p>HMAC通过将密钥混入哈希运算中,提供了一种更强大的消息认证方法,防范了一
  * 些针对普通哈希的攻击.</p>
  *
- * @author Shilin <br > magicianlib@gmail.com
+ * @author magicianlib@gmail.com
  * @since 2023/11/11 10:52
  */
 public enum Hmac {
