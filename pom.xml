@@ -4,8 +4,6 @@
   <groupId>org.magicianlib</groupId>
   <artifactId>bcrypt-util</artifactId>
   <version>${revision}</version>
-  <name>Archetype - bcrypt-util</name>
-  <url>http://maven.apache.org</url>
 
   <properties>
     <maven.compiler.source>8</maven.compiler.source>

@@ -14,6 +14,9 @@ import java.util.Map;
  * 使用SHAx算法对数据进行哈希,然后使用RSA算法对哈希值进行数字签名.
  *
  * <p>用于确保消息的完整性和验证消息发送者的身份.
+ *
+ * @author Shilin <br > magicianlib@gmail.com
+ * @since 2023/11/11 10:53
  */
 public enum SHAwithRSA {
 
@@ -28,6 +31,24 @@ public enum SHAwithRSA {
 
     SHAwithRSA(String algorithm) {
         this.algorithm = algorithm;
+    }
+
+    /**
+     * 签名
+     */
+    public String signatureHex(String rsaPriBase64, String plaintext) throws NoSuchAlgorithmException,
+            InvalidKeySpecException, InvalidKeyException, SignatureException {
+        return Hex.toHexString(signature(rsaPriBase64, plaintext));
+    }
+
+    public String signatureBase64(String rsaPriBase64, String plaintext) throws NoSuchAlgorithmException,
+            InvalidKeySpecException, InvalidKeyException, SignatureException {
+        return Base64.encodeToString(signature(rsaPriBase64, plaintext));
+    }
+
+    public byte[] signature(String rsaPriBase64, String plaintext) throws NoSuchAlgorithmException,
+            InvalidKeySpecException, InvalidKeyException, SignatureException {
+        return signature(Base64.decodeToByte(rsaPriBase64), plaintext);
     }
 
     public byte[] signature(byte[] rsaPri, String plaintext) throws NoSuchAlgorithmException,
@@ -45,6 +66,21 @@ public enum SHAwithRSA {
         return spi.sign();
     }
 
+    /**
+     * 验签
+     */
+    public boolean verifyHex(String rsaPubBase64, String plaintext, String signatureHex) throws NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, InvalidKeyException {
+        return verify(rsaPubBase64, plaintext, Hex.toByteArray(signatureHex));
+    }
+
+    public boolean verifyBase64(String rsaPubBase64, String plaintext, String signatureBase64) throws NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, InvalidKeyException {
+        return verify(rsaPubBase64, plaintext, Base64.decodeToByte(signatureBase64));
+    }
+
+    public boolean verify(String rsaPubBase64, String plaintext, byte[] signature) throws NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, InvalidKeyException {
+        return verify(Base64.decodeToByte(rsaPubBase64), plaintext, signature);
+    }
+
     public boolean verify(byte[] rsaPub, String plaintext, byte[] signature) throws NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, InvalidKeyException {
 
         // 公钥证书
@@ -59,28 +95,24 @@ public enum SHAwithRSA {
         return spi.verify(signature);
     }
 
-    public static Map<String, String> genKeyPair(int keysize) throws Exception {
+    /**
+     * RSA key-pair
+     */
+    public static Map<String, String> genKeyPair(int keySize) throws Exception {
 
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
-        keyPairGen.initialize(keysize);
+        keyPairGen.initialize(keySize);
         KeyPair keyPair = keyPairGen.generateKeyPair();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 
         Map<String, String> keyMap = new HashMap<>(2);
-        keyMap.put("private", encodeToString(privateKey.getEncoded()));
-        keyMap.put("public", encodeToString(publicKey.getEncoded()));
+        keyMap.put("private", Base64.encodeToString(privateKey.getEncoded()));
+        keyMap.put("public", Base64.encodeToString(publicKey.getEncoded()));
 
         return keyMap;
     }
 
-    private static String encodeToString(byte[] encoded) {
-        return java.util.Base64.getEncoder().encodeToString(encoded);
-    }
-
-    private static byte[] decodeToByte(String decoded) {
-        return java.util.Base64.getDecoder().decode(decoded);
-    }
 
     /**
      * Convert each byte to a hexadecimal string
@@ -101,10 +133,10 @@ public enum SHAwithRSA {
 
         String plaintext = "hello,world";
 
-        byte[] signature = SHAwithRSA.SHA1withRSA.signature(decodeToByte(keyPair.get("private")), plaintext);
-        System.out.println(toHexString(signature));
+        String signature = SHAwithRSA.SHA1withRSA.signatureHex(keyPair.get("private"), plaintext);
+        System.out.println(signature);
 
-        boolean verify = SHAwithRSA.SHA1withRSA.verify(decodeToByte(keyPair.get("public")), plaintext, signature);
+        boolean verify = SHAwithRSA.SHA1withRSA.verifyHex(keyPair.get("public"), plaintext, signature);
         System.out.println(verify);
 
     }

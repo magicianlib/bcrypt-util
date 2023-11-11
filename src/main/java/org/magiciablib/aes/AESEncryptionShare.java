@@ -16,16 +16,16 @@ public final class AESEncryptionShare {
      *
      * @param key        128位(16字节)密钥
      * @param initVector 128位(16字节)始化向量
-     * @param plainText  要加密的文本
+     * @param plaintext  要加密的文本
      */
-    public static String encrypt(String key, String initVector, String plainText) throws Exception {
+    public static String encrypt(String key, String initVector, String plaintext) throws Exception {
         IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
         SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
 
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
-        byte[] encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+        byte[] encrypted = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
         return Base64.getEncoder().encodeToString(encrypted);
     }
 
