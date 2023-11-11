@@ -6,9 +6,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * HMAC(Hash-based Message Authentication Code) 是一种基于散列
- * 函数的消息认证码算法. 它结合了散列函数和一个密钥, 用于生成具有一定
- * 长度的固定大小的哈希值. <em>用于验证消息的完整性和认证消息发送者的身份</em>.
+ * <p>Hmac(Hash-based Message Authentication Code)是一种使用哈希函数
+ * 和秘密密钥来生成消息认证码的算法.</p>
+ *
+ * <p>HMAC通过将密钥混入哈希运算中,提供了一种更强大的消息认证方法,防范了一
+ * 些针对普通哈希的攻击.</p>
  *
  * @author Shilin <br > magicianlib@gmail.com
  * @since 2023/11/11 10:52
