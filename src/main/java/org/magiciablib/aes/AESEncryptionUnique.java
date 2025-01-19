@@ -29,13 +29,13 @@ public final class AESEncryptionUnique {
     static {
         try {
             IvParameterSpec iv = new IvParameterSpec(IV_128.getBytes(StandardCharsets.UTF_8));
-            SecretKeySpec skeySpec = new SecretKeySpec(KEY_128.getBytes(StandardCharsets.UTF_8), "AES");
+            SecretKeySpec spec = new SecretKeySpec(KEY_128.getBytes(StandardCharsets.UTF_8), "AES");
 
             ENCRYPT_CIPHER = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            ENCRYPT_CIPHER.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+            ENCRYPT_CIPHER.init(Cipher.ENCRYPT_MODE, spec, iv);
 
             DECRYPT_CIPHER = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            DECRYPT_CIPHER.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+            DECRYPT_CIPHER.init(Cipher.DECRYPT_MODE, spec, iv);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
